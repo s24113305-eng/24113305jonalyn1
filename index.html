@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Dart Legacy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Orbitron:wght@400;900&display=swap');
+      
+      body {
+        font-family: 'Fredoka', sans-serif;
+        touch-action: none;
+        overflow: hidden;
+        background-color: #020617;
+      }
+
+      /* Cyberpunk Background Grid */
+      .bg-grid {
+        background-image: linear-gradient(to right, rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        perspective: 1000px;
+      }
+
+      .bg-grid::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 0%, rgba(2, 6, 23, 1) 100%);
+      }
+
+      /* Scanline Effect */
+      .scanline {
+        width: 100%;
+        height: 100px;
+        z-index: 100;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(34, 211, 238, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+        opacity: 0.1;
+        position: absolute;
+        bottom: 100%;
+        animation: scanline 8s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes scanline {
+        0% { bottom: 100%; }
+        100% { bottom: -100px; }
+      }
+      
+      @keyframes neon-pulse {
+        0%, 100% { transform: scale(1); filter: brightness(1); }
+        50% { transform: scale(1.01); filter: brightness(1.2); }
+      }
+      
+      @keyframes neon-color-shift {
+        0% { color: #22d3ee; text-shadow: 0 0 15px rgba(34, 211, 238, 0.8); }
+        33% { color: #f43f5e; text-shadow: 0 0 15px rgba(244, 63, 94, 0.8); }
+        66% { color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
+        100% { color: #22d3ee; text-shadow: 0 0 15px rgba(34, 211, 238, 0.8); }
+      }
+
+      .animate-neon-pulse {
+        animation: neon-pulse 4s ease-in-out infinite;
+      }
+      
+      .animate-neon-color-shift {
+        animation: neon-color-shift 8s linear infinite;
+      }
+
+      .title-font {
+        font-family: 'Orbitron', sans-serif;
+      }
+
+      /* Glitch effect for title */
+      .glitch {
+        position: relative;
+      }
+      .glitch::before, .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0.8;
+      }
+      .glitch::before {
+        color: #22d3ee;
+        z-index: -1;
+        animation: glitch-anim 3s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        color: #f43f5e;
+        z-index: -2;
+        animation: glitch-anim2 2s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitch-anim {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0); }
+      }
+      @keyframes glitch-anim2 {
+        0% { transform: translate(0); }
+        20% { transform: translate(2px, -2px); }
+        40% { transform: translate(2px, 2px); }
+        60% { transform: translate(-2px, -2px); }
+        80% { transform: translate(-2px, 2px); }
+        100% { transform: translate(0); }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-slate-950 text-white select-none">
+    <div class="bg-grid absolute inset-0 pointer-events-none"></div>
+    <div class="scanline"></div>
+    <div id="root"></div>
+  </body>
+</html>
