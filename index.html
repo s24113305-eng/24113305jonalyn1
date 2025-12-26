@@ -1,131 +1,280 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Dart Legacy</title>
+    <title>Dart Legacy - White Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Orbitron:wght@400;900&display=swap');
-      
-      body {
-        font-family: 'Fredoka', sans-serif;
-        touch-action: none;
-        overflow: hidden;
-        background-color: #020617;
-      }
-
-      /* Cyberpunk Background Grid */
-      .bg-grid {
-        background-image: linear-gradient(to right, rgba(34, 211, 238, 0.05) 1px, transparent 1px),
-                          linear-gradient(to bottom, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
-        background-size: 50px 50px;
-        perspective: 1000px;
-      }
-
-      .bg-grid::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(transparent 0%, rgba(2, 6, 23, 1) 100%);
-      }
-
-      /* Scanline Effect */
-      .scanline {
-        width: 100%;
-        height: 100px;
-        z-index: 100;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(34, 211, 238, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
-        opacity: 0.1;
-        position: absolute;
-        bottom: 100%;
-        animation: scanline 8s linear infinite;
-        pointer-events: none;
-      }
-
-      @keyframes scanline {
-        0% { bottom: 100%; }
-        100% { bottom: -100px; }
-      }
-      
-      @keyframes neon-pulse {
-        0%, 100% { transform: scale(1); filter: brightness(1); }
-        50% { transform: scale(1.01); filter: brightness(1.2); }
-      }
-      
-      @keyframes neon-color-shift {
-        0% { color: #22d3ee; text-shadow: 0 0 15px rgba(34, 211, 238, 0.8); }
-        33% { color: #f43f5e; text-shadow: 0 0 15px rgba(244, 63, 94, 0.8); }
-        66% { color: #fbbf24; text-shadow: 0 0 15px rgba(251, 191, 36, 0.8); }
-        100% { color: #22d3ee; text-shadow: 0 0 15px rgba(34, 211, 238, 0.8); }
-      }
-
-      .animate-neon-pulse {
-        animation: neon-pulse 4s ease-in-out infinite;
-      }
-      
-      .animate-neon-color-shift {
-        animation: neon-color-shift 8s linear infinite;
-      }
-
-      .title-font {
-        font-family: 'Orbitron', sans-serif;
-      }
-
-      /* Glitch effect for title */
-      .glitch {
-        position: relative;
-      }
-      .glitch::before, .glitch::after {
-        content: attr(data-text);
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        opacity: 0.8;
-      }
-      .glitch::before {
-        color: #22d3ee;
-        z-index: -1;
-        animation: glitch-anim 3s infinite linear alternate-reverse;
-      }
-      .glitch::after {
-        color: #f43f5e;
-        z-index: -2;
-        animation: glitch-anim2 2s infinite linear alternate-reverse;
-      }
-
-      @keyframes glitch-anim {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-        100% { transform: translate(0); }
-      }
-      @keyframes glitch-anim2 {
-        0% { transform: translate(0); }
-        20% { transform: translate(2px, -2px); }
-        40% { transform: translate(2px, 2px); }
-        60% { transform: translate(-2px, -2px); }
-        80% { transform: translate(-2px, 2px); }
-        100% { transform: translate(0); }
-      }
-    </style>
-  <script type="importmap">
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Orbitron:wght@400;900&display=swap');
+      body { 
+        font-family: 'Fredoka', sans-serif; 
+        margin: 0; 
+        background-color: #ffffff; 
+        color: #0f172a; 
+        overflow: hidden; 
+        user-select: none; 
+        touch-action: none; 
+      }
+      .bg-grid { 
+        background-image: linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px), 
+                          linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px); 
+        background-size: 50px 50px; 
+        position: absolute; 
+        inset: 0; 
+        pointer-events: none; 
+      }
+      .bg-grid::after { 
+        content: ""; 
+        position: absolute; 
+        inset: 0; 
+        background: linear-gradient(transparent 0%, rgba(255, 255, 255, 1) 100%); 
+      }
+      .scanline { 
+        width: 100%; 
+        height: 100px; 
+        z-index: 100; 
+        background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(34, 211, 238, 0.05) 50%, rgba(255, 255, 255, 0) 100%); 
+        opacity: 0.2; 
+        position: absolute; 
+        bottom: 100%; 
+        animation: scanline 8s linear infinite; 
+        pointer-events: none; 
+      }
+      @keyframes scanline { 0% { bottom: 100%; } 100% { bottom: -100px; } }
+      .title-font { font-family: 'Orbitron', sans-serif; }
+      .glitch { position: relative; }
+      .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
+      .glitch::before { color: #22d3ee; z-index: -1; animation: glitch-anim 3s infinite linear alternate-reverse; }
+      .glitch::after { color: #f43f5e; z-index: -2; animation: glitch-anim2 2s infinite linear alternate-reverse; }
+      @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 100% { transform: translate(0); } }
+      @keyframes glitch-anim2 { 0% { transform: translate(0); } 20% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+    </style>
 </head>
-  <body class="bg-slate-950 text-white select-none">
-    <div class="bg-grid absolute inset-0 pointer-events-none"></div>
-    <div class="scanline"></div>
+<body>
     <div id="root"></div>
-  </body>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useRef, useCallback } from 'react';
+        import ReactDOM from 'react-dom/client';
+        import { 
+          Target, Heart, Trophy, CheckCircle2, ShieldCheck, Quote, 
+          Star, Crosshair, ArrowRight, Zap, Check 
+        } from 'lucide-react';
+
+        // --- CONSTANTS & CONFIG ---
+        const GameState = { MENU: 'MENU', PLAYING: 'PLAYING', GAME_OVER: 'GAME_OVER', LEVEL_COMPLETE: 'LEVEL_COMPLETE', PRIZE_WON: 'PRIZE_WON' };
+        const PRIZES = ["NEON BLADE", "CYBER CORE", "PULSE ORB", "VOID DART", "ELECTRIC WING"];
+        const PRIZE_COLORS = ["#ff00ff", "#00cccc", "#ffcc00", "#ff4d00", "#00aa00"];
+        const CONFIG = { TARGET_RADIUS: 95, KNIFE_WIDTH: 10, KNIFE_HEIGHT: 70, COLLISION: 0.22, SPEED: 32 };
+        
+        const TRANSLATIONS = {
+          en: { TITLE: "DART LEGACY", START: "INITIALIZE CHALLENGE", OVER: "SYSTEM FAILURE", PAY: "PAY MORE TO CONTINUE", AGAIN: "PLAY AGAIN", CLEAR: "SECTOR CLEAR", ACCESS: "ACCESS PRIZE CORE", WON: "REWARD ACQUIRED" },
+          tw: { TITLE: "飛鏢傳奇", START: "啟動挑戰", OVER: "系統故障", PAY: "請投幣以繼續", AGAIN: "再次挑戰", CLEAR: "區域清除！", ACCESS: "進入獎勵核心", WON: "獲得獎勵" }
+        };
+
+        // --- COMPONENTS ---
+
+        const HUDCorners = () => (
+          <>
+            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-slate-900/10 rounded-tl-xl pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-slate-900/10 rounded-tr-xl pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-slate-900/10 rounded-bl-xl pointer-events-none"></div>
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-slate-900/10 rounded-br-xl pointer-events-none"></div>
+          </>
+        );
+
+        const GameCanvas = ({ gameState, level, onHit, onFail, onLevelComplete, onPrizeWon, onDartsUpdate }) => {
+          const canvasRef = useRef(null);
+          const rotationRef = useRef(0);
+          const knivesRef = useRef([]);
+          const activeRef = useRef(null);
+          const knivesLeftRef = useRef(5);
+          const frameIdRef = useRef(0);
+
+          const drawDart = (ctx) => {
+            const w = CONFIG.KNIFE_WIDTH, h = CONFIG.KNIFE_HEIGHT;
+            ctx.save();
+            ctx.fillStyle = "#475569"; ctx.beginPath(); ctx.roundRect(-w/2, -h/2, w, h*0.6, 2); ctx.fill();
+            ctx.fillStyle = "#1e293b"; ctx.beginPath(); ctx.moveTo(-0.5, h*0.1); ctx.lineTo(0, h/2+10); ctx.lineTo(0.5, h*0.1); ctx.fill();
+            ctx.fillStyle = "#ff0080"; ctx.beginPath(); ctx.moveTo(0, -h/2+5); ctx.lineTo(-w*2, -h/2-15); ctx.lineTo(0, -h/2-5); ctx.lineTo(w*2, -h/2-15); ctx.closePath(); ctx.fill();
+            ctx.restore();
+          };
+
+          const throwKnife = useCallback(() => {
+            if (activeRef.current || gameState !== GameState.PLAYING || knivesLeftRef.current <= 0) return;
+            activeRef.current = { y: canvasRef.current.height - 120 };
+            knivesLeftRef.current--;
+            onDartsUpdate(knivesLeftRef.current);
+          }, [gameState, onDartsUpdate]);
+
+          useEffect(() => {
+            const handleKey = (e) => e.code === 'Space' && throwKnife();
+            window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
+          }, [throwKnife]);
+
+          useEffect(() => {
+            knivesRef.current = []; knivesLeftRef.current = level === 6 ? 1 : 5 + Math.floor(level/2); onDartsUpdate(knivesLeftRef.current);
+          }, [level]);
+
+          const update = () => {
+            const canvas = canvasRef.current; if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2, centerY = canvas.height / 3 + 40;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Light Background Gradient
+            const bgGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, canvas.width * 0.7);
+            bgGrad.addColorStop(0, "#f8fafc");
+            bgGrad.addColorStop(1, "#ffffff");
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (gameState === GameState.PLAYING) rotationRef.current += (level === 6 ? 0.06 : 0.03 + level * 0.01);
+            const radius = CONFIG.TARGET_RADIUS + (level === 6 ? 60 : 0);
+
+            ctx.save(); ctx.translate(centerX, centerY); ctx.rotate(rotationRef.current);
+            if (level < 6) {
+              ctx.strokeStyle = "#0891b2"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, radius + 5, 0, Math.PI * 2); ctx.stroke();
+              for (let i = 0; i < 20; i++) {
+                ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0, 0, radius, (i*Math.PI*2)/20, ((i+1)*Math.PI*2)/20);
+                ctx.fillStyle = i % 2 === 0 ? "#1e293b" : "#f1f5f9"; ctx.fill();
+              }
+            } else {
+              for (let i = 0; i < PRIZES.length; i++) {
+                ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0, 0, radius, (i*Math.PI*2)/PRIZES.length, ((i+1)*Math.PI*2)/PRIZES.length);
+                ctx.fillStyle = PRIZE_COLORS[i % 5]; ctx.fill();
+                ctx.save(); ctx.rotate((i+0.5)*Math.PI*2/PRIZES.length); ctx.translate(radius*0.7, 0); ctx.fillStyle="white"; ctx.font="bold 10px Orbitron"; ctx.fillText(PRIZES[i], -20, 0); ctx.restore();
+              }
+            }
+            knivesRef.current.forEach(k => { ctx.save(); ctx.rotate(k.angle + Math.PI/2); ctx.translate(0, -radius); drawDart(ctx); ctx.restore(); });
+            ctx.restore();
+
+            if (activeRef.current) {
+              activeRef.current.y -= CONFIG.SPEED;
+              if (activeRef.current.y - 30 <= centerY + radius) {
+                let impact = (Math.PI/2) - rotationRef.current; impact = (impact % (Math.PI*2)); if (impact < 0) impact += Math.PI*2;
+                if (level === 6) {
+                  onPrizeWon(PRIZES[Math.floor(impact / (Math.PI*2/PRIZES.length)) % PRIZES.length]); activeRef.current = null;
+                } else {
+                  if (knivesRef.current.some(k => { let d = Math.abs(k.angle-impact); return (d > Math.PI ? Math.PI*2-d : d) < CONFIG.COLLISION; })) {
+                    activeRef.current = null; onFail();
+                  } else {
+                    knivesRef.current.push({ angle: impact }); activeRef.current = null; onHit();
+                    if (knivesLeftRef.current === 0) setTimeout(onLevelComplete, 400);
+                  }
+                }
+              } else { ctx.save(); ctx.translate(centerX, activeRef.current.y); ctx.rotate(Math.PI); drawDart(ctx); ctx.restore(); }
+            } else if (knivesLeftRef.current > 0 && gameState === GameState.PLAYING) {
+              ctx.save(); ctx.translate(centerX, canvas.height - 120); ctx.rotate(Math.PI); drawDart(ctx); ctx.restore();
+            }
+            frameIdRef.current = requestAnimationFrame(update);
+          };
+
+          useEffect(() => {
+            const resize = () => { if (canvasRef.current) { canvasRef.current.width = window.innerWidth; canvasRef.current.height = window.innerHeight; } };
+            window.addEventListener('resize', resize); resize();
+            frameIdRef.current = requestAnimationFrame(update);
+            return () => { cancelAnimationFrame(frameIdRef.current); window.removeEventListener('resize', resize); };
+          }, [gameState, level]);
+
+          return <canvas ref={canvasRef} className="block w-full h-full touch-none" onMouseDown={throwKnife} />;
+        };
+
+        const App = () => {
+          const [gameState, setGameState] = useState(GameState.MENU);
+          const [score, setScore] = useState(0);
+          const [level, setLevel] = useState(1);
+          const [darts, setDarts] = useState(5);
+          const [prize, setPrize] = useState(null);
+          const [lang, setLang] = useState('en');
+          const t = TRANSLATIONS[lang];
+
+          const start = () => { setScore(0); setLevel(1); setGameState(GameState.PLAYING); };
+          const btn = "px-10 py-4 rounded-xl font-black text-lg title-font transition-transform active:scale-95 shadow-xl uppercase";
+
+          return (
+            <div className="relative w-full h-screen overflow-hidden bg-white text-slate-900">
+              <div className="bg-grid"></div>
+              <div className="scanline"></div>
+              <GameCanvas gameState={gameState} level={level} onHit={()=>setScore(s=>s+1)} onFail={()=>setGameState(GameState.GAME_OVER)} onLevelComplete={()=>{ if(level<5)setLevel(l=>l+1); else setGameState(GameState.LEVEL_COMPLETE); }} onPrizeWon={p=>{setPrize(p); setGameState(GameState.PRIZE_WON);}} onDartsUpdate={setDarts} />
+              
+              {gameState === GameState.PLAYING && (
+                <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
+                  <div className="flex justify-between items-start">
+                    <div className="bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-slate-900/5 shadow-lg">
+                      <div className="text-4xl font-black title-font text-slate-900">{score}</div>
+                      <div className="text-[9px] text-cyan-600 font-bold uppercase tracking-widest">SCORE</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-black title-font text-slate-900">{level === 6 ? "BONUS" : `S-${level}`}</div>
+                      <div className="text-[9px] text-cyan-600 font-bold uppercase tracking-widest">SECTOR</div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col-reverse gap-2 ml-2">
+                    {[...Array(5)].map((_, i) => <div key={i} className={`w-2 h-8 rounded-full ${i < darts ? 'bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'bg-slate-200 opacity-50'}`}></div>)}
+                  </div>
+                </div>
+              )}
+
+              {gameState !== GameState.PLAYING && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm p-6">
+                  <div className="max-w-md w-full text-center flex flex-col items-center relative p-12 bg-white/90 rounded-[3rem] border border-slate-900/5 shadow-2xl">
+                    <HUDCorners />
+                    {gameState === GameState.MENU && (
+                      <>
+                        <h1 className="glitch text-6xl font-black mb-8 title-font text-slate-900" data-text={t.TITLE}>{t.TITLE}</h1>
+                        <button onClick={start} className={`${btn} bg-cyan-600 text-white`}>{t.START}</button>
+                        <div className="flex gap-4 mt-8">
+                          <button onClick={()=>setLang('en')} className={`text-xs font-bold ${lang==='en'?'text-cyan-600':'text-slate-400'}`}>EN</button>
+                          <button onClick={()=>setLang('tw')} className={`text-xs font-bold ${lang==='tw'?'text-cyan-600':'text-slate-400'}`}>TW</button>
+                        </div>
+                      </>
+                    )}
+                    {gameState === GameState.GAME_OVER && (
+                      <>
+                        <ShieldCheck size={64} className="text-rose-500 mb-6 rotate-180" />
+                        <h2 className="text-4xl font-black text-rose-600 mb-2 title-font">{t.OVER}</h2>
+                        <p className="text-slate-400 text-xs font-bold mb-8 tracking-widest uppercase">{t.PAY}</p>
+                        <button onClick={start} className={`${btn} bg-rose-600 text-white w-full`}>{t.AGAIN}</button>
+                      </>
+                    )}
+                    {gameState === GameState.LEVEL_COMPLETE && (
+                      <>
+                        <CheckCircle2 size={64} className="text-cyan-600 mb-6 animate-pulse" />
+                        <h2 className="text-3xl font-black text-slate-900 mb-8 title-font">{t.CLEAR}</h2>
+                        <button onClick={()=>setLevel(6)||setGameState(GameState.PLAYING)} className={`${btn} bg-rose-500 text-white w-full`}>{t.ACCESS}</button>
+                      </>
+                    )}
+                    {gameState === GameState.PRIZE_WON && (
+                      <>
+                        <Trophy size={64} className="text-yellow-600 mb-6" />
+                        <h2 className="text-2xl font-black text-slate-900 mb-6 title-font">{t.WON}</h2>
+                        <div className="text-3xl font-black text-yellow-600 mb-10 title-font tracking-tighter">{prize}</div>
+                        <button onClick={start} className={`${btn} bg-cyan-600 text-white w-full`}>{t.AGAIN}</button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
 </html>

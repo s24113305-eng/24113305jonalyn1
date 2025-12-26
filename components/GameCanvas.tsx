@@ -1,5 +1,4 @@
-
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { GameState, GameTheme, Knife, Particle, BonusItem, Shockwave } from '../types';
 import { GAME_CONFIG } from '../constants';
 
@@ -112,14 +111,8 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * 6 + 2;
       fireworksRef.current.push({
-        x,
-        y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        color,
-        alpha: 1.0,
-        size: Math.random() * 3 + 1,
-        decay: 0.005 + Math.random() * 0.01,
+        x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+        color, alpha: 1.0, size: Math.random() * 3 + 1, decay: 0.005 + Math.random() * 0.01,
         sparkle: Math.random() > 0.7
       });
     }
@@ -266,7 +259,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
     ctx.lineTo(0.5, h/2 - 12); 
     ctx.fill();
 
-    // High-tech Barrel (Tungsten Style)
+    // Barrel
     const barrelY = h/2 - 35;
     const barrelH = 35;
     const barrelGrad = ctx.createLinearGradient(-w/2, 0, w/2, 0);
@@ -281,27 +274,10 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
     ctx.roundRect(-w/2, barrelY, w, barrelH, 3); 
     ctx.fill();
 
-    // Barrel Grip
-    ctx.strokeStyle = "rgba(0,0,0,0.3)";
-    ctx.lineWidth = 0.5;
-    for (let i = 2; i < barrelH - 2; i += 3) {
-        ctx.beginPath();
-        ctx.moveTo(-w/2, barrelY + i);
-        ctx.lineTo(w/2, barrelY + i);
-        ctx.stroke();
-    }
-
-    // Shaft
-    ctx.fillStyle = "#334155";
-    ctx.beginPath();
-    ctx.roundRect(-w/5, barrelY - 15, w*0.4, 15, 1);
-    ctx.fill();
-
     // Flights
     const flightY = barrelY - 15;
     const flightH = 25;
     const flightW = w * 2.2;
-
     ctx.fillStyle = theme.knifeHandleColor;
     ctx.beginPath();
     ctx.moveTo(0, flightY);
@@ -310,24 +286,6 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
     ctx.lineTo(flightW, flightY - flightH);
     ctx.closePath();
     ctx.fill();
-
-    ctx.fillStyle = "rgba(0,0,0,0.2)";
-    ctx.beginPath();
-    ctx.moveTo(0, flightY);
-    ctx.lineTo(-flightW, flightY - flightH);
-    ctx.lineTo(0, flightY - flightH * 0.7);
-    ctx.closePath();
-    ctx.fill();
-
-    ctx.fillStyle = theme.accentColor;
-    ctx.globalAlpha = 0.6;
-    ctx.beginPath();
-    ctx.moveTo(0, flightY);
-    ctx.lineTo(-w/3, flightY - flightH);
-    ctx.lineTo(w/3, flightY - flightH);
-    ctx.closePath();
-    ctx.fill();
-
     ctx.restore();
   };
 
@@ -345,10 +303,6 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
         onDartsUpdate?.(knivesLeftRef.current);
     }
   }, [gameState, onDartsUpdate]);
-
-  const handleInteraction = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault(); throwKnife();
-  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => { if (e.code === 'Space') { e.preventDefault(); throwKnife(); } };
@@ -387,7 +341,6 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
         currentRotationSpeedRef.current += (ts - currentRotationSpeedRef.current) * 0.06;
         rotationRef.current += currentRotationSpeedRef.current;
       } else {
-        // Smooth extraction wheel rotation
         rotationRef.current += 0.06 + Math.sin(time / 1000) * 0.02;
       }
     }
@@ -396,23 +349,17 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
     let sx = 0, sy = 0;
     if (shakeRef.current > 0) { shakeRef.current -= 0.5; sx = (Math.random()-0.5)*shakeRef.current*4; sy = (Math.random()-0.5)*shakeRef.current*4; }
 
-    // Board Render
     ctx.save();
     ctx.translate(centerX + sx, centerY + sy);
     ctx.scale(boardScaleRef.current, boardScaleRef.current);
     ctx.globalAlpha = boardIntroAlphaRef.current;
     
     const radius = GAME_CONFIG.TARGET_RADIUS + (level === 6 ? 60 : 0);
-
     ctx.rotate(currentRotation);
     
     if (level < 6) {
-      // Standard Board Drawing
-      ctx.shadowBlur = 20; ctx.shadowColor = theme.accentColor;
       ctx.strokeStyle = theme.accentColor; ctx.lineWidth = 3;
       ctx.beginPath(); ctx.arc(0, 0, radius + 5, 0, Math.PI * 2); ctx.stroke();
-      ctx.shadowBlur = 0;
-
       const segs = 20;
       for (let i = 0; i < segs; i++) {
         const sa = (i * Math.PI * 2) / segs - (Math.PI / 2) - (Math.PI / segs);
@@ -420,121 +367,39 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
         ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0, 0, radius, sa, ea);
         ctx.fillStyle = i % 2 === 0 ? "#0f172a" : "#020617";
         ctx.fill();
-        ctx.strokeStyle = theme.accentColor; ctx.lineWidth = 0.5; ctx.globalAlpha = 0.3;
-        ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(sa) * radius, Math.sin(sa) * radius); ctx.stroke();
-        ctx.globalAlpha = 1.0;
       }
     } else {
-      // EXTRACTION WHEEL (Level 6)
-      ctx.shadowBlur = 30; ctx.shadowColor = "#ffffff";
-      ctx.strokeStyle = "#fff"; ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.arc(0, 0, radius + 8, 0, Math.PI * 2); ctx.stroke();
-      ctx.shadowBlur = 0;
-
       const segs = PRIZES.length;
       for (let i = 0; i < segs; i++) {
         const sa = (i * Math.PI * 2) / segs - (Math.PI / 2) - (Math.PI / segs);
         const ea = ((i + 1) * Math.PI * 2) / segs - (Math.PI / 2) - (Math.PI / segs);
-        
-        // Background Slice
         ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0, 0, radius, sa, ea);
         ctx.fillStyle = PRIZE_COLORS[i % PRIZE_COLORS.length];
         ctx.fill();
-        
-        // Inner Glow Overlay
-        const overlayGrad = ctx.createRadialGradient(0,0, radius * 0.5, 0,0, radius);
-        overlayGrad.addColorStop(0, "rgba(0,0,0,0)");
-        overlayGrad.addColorStop(1, "rgba(0,0,0,0.4)");
-        ctx.fillStyle = overlayGrad; ctx.fill();
-
-        // Slice Border
-        ctx.strokeStyle = "rgba(255,255,255,0.3)"; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(sa) * radius, Math.sin(sa) * radius); ctx.stroke();
-
-        // PRIZE TEXT
         ctx.save();
         const textAngle = sa + (ea - sa) / 2;
-        ctx.rotate(textAngle);
-        ctx.translate(radius * 0.65, 0);
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 14px 'Orbitron', sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.shadowBlur = 10; ctx.shadowColor = "rgba(0,0,0,1)";
-        ctx.fillText(PRIZES[i], 0, 0);
+        ctx.rotate(textAngle); ctx.translate(radius * 0.65, 0); ctx.fillStyle = "#fff";
+        ctx.font = "bold 14px 'Orbitron', sans-serif"; ctx.textAlign = "center"; ctx.fillText(PRIZES[i], 0, 0);
         ctx.restore();
       }
     }
-
-    // Common Core
-    ctx.shadowBlur = 15; ctx.shadowColor = theme.accentColor;
-    ctx.fillStyle = theme.accentColor;
-    ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = theme.knifeHandleColor;
-    ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
-    ctx.shadowBlur = 0;
-
-    bonusItemsRef.current.forEach(item => {
-      if (!item.hit) {
-        ctx.save(); ctx.rotate(item.angle); ctx.translate(0, -radius + 15); ctx.rotate(time / 300);
-        ctx.fillStyle = "#fff"; ctx.shadowBlur = 15; ctx.shadowColor = "#fff";
-        ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(6, 0); ctx.lineTo(0, 8); ctx.lineTo(-6, 0); ctx.closePath();
-        ctx.fill(); ctx.restore();
-      }
-    });
-
     knivesRef.current.forEach(k => {
       ctx.save(); ctx.rotate(k.angle + Math.PI/2); ctx.translate(0, -radius); drawDart(ctx); ctx.restore();
     });
     ctx.restore();
 
-    // Board Static Pointer (HUD Level)
-    if (level === 6) {
-        ctx.save();
-        ctx.translate(centerX, centerY + radius + 15);
-        ctx.fillStyle = "#fff";
-        ctx.shadowBlur = 20; ctx.shadowColor = "#00ffff";
-        ctx.beginPath();
-        ctx.moveTo(0, -15); ctx.lineTo(15, 10); ctx.lineTo(-15, 10); ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-    }
-
-    ctx.globalAlpha = 1.0;
-    shockwavesRef.current.forEach((s, idx) => {
-      ctx.save(); ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-      ctx.strokeStyle = s.color; ctx.globalAlpha = s.alpha; ctx.lineWidth = 2; ctx.stroke();
-      s.radius += 4; s.alpha -= 0.05;
-      if (s.alpha <= 0) shockwavesRef.current.splice(idx, 1);
-      ctx.restore();
-    });
-
     if (activeKnifeRef.current) {
         const k = activeKnifeRef.current;
         k.y! -= GAME_CONFIG.THROW_SPEED;
         const hitY = centerY + radius;
-        
         if (k.y! - 35 <= hitY) {
             let impactA = (Math.PI / 2) - currentRotation;
             impactA = (impactA % (Math.PI * 2)); if (impactA < 0) impactA += Math.PI * 2;
-
             if (level === 6) {
                 const segs = PRIZES.length;
                 const pIdx = Math.floor(impactA / (Math.PI*2/segs)) % segs;
-                createExplosion(centerX, hitY, PRIZE_COLORS[pIdx]);
-                onPrizeWon(PRIZES[pIdx]);
-                activeKnifeRef.current = null;
+                onPrizeWon(PRIZES[pIdx]); activeKnifeRef.current = null;
             } else {
-                bonusItemsRef.current.forEach(item => {
-                  let d = Math.abs(item.angle - impactA);
-                  if (d > Math.PI) d = Math.PI*2 - d;
-                  if (!item.hit && d < 0.15) {
-                    item.hit = true; 
-                    spawnParticles(centerX, hitY, "#fff", 30);
-                    createExplosion(centerX, hitY, "#fff");
-                    playSound(800, 'sine', 0.2, 0.2);
-                  }
-                });
                 const collision = knivesRef.current.some(o => {
                     let d = Math.abs(o.angle - impactA);
                     if (d > Math.PI) d = Math.PI*2 - d;
@@ -548,10 +413,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
                     else comboRef.current = 1;
                     lastHitTimeRef.current = now;
                     k.state = 'STUCK'; k.angle = impactA; knivesRef.current.push({...k});
-                    activeKnifeRef.current = null; shakeRef.current = 3;
-                    shockwavesRef.current.push({ x: centerX, y: hitY, radius: 10, maxRadius: 60, alpha: 1, color: theme.accentColor });
-                    spawnParticles(centerX, hitY, theme.accentColor);
-                    playSound(150 + comboRef.current * 50);
+                    activeKnifeRef.current = null; playSound(150 + comboRef.current * 50);
                     onHit(comboRef.current);
                     if (knivesLeftRef.current === 0) setTimeout(onLevelComplete, 500);
                 }
@@ -560,17 +422,9 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
             ctx.save(); ctx.translate(k.x!, k.y!); ctx.rotate(Math.PI); drawDart(ctx); ctx.restore();
         }
     }
-
     if (knivesLeftRef.current > 0 && !activeKnifeRef.current && (gameState === GameState.PLAYING || gameState === GameState.PRIZE_WON)) {
-        ctx.save(); ctx.translate(width/2, height-120); ctx.translate(0, Math.sin(time/200)*3); ctx.rotate(Math.PI); drawDart(ctx); ctx.restore();
+        ctx.save(); ctx.translate(width/2, height-120); ctx.rotate(Math.PI); drawDart(ctx); ctx.restore();
     }
-
-    particlesRef.current.forEach((p, idx) => {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.5; p.life -= 0.03;
-        if (p.life > 0) { ctx.globalAlpha = p.life; ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size || 2, p.size || 2); }
-        else particlesRef.current.splice(idx, 1);
-    });
-
     frameIdRef.current = requestAnimationFrame(update);
   };
 
@@ -585,7 +439,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return <canvas ref={canvasRef} className="block w-full h-full touch-none" onMouseDown={handleInteraction} onTouchStart={handleInteraction} />;
+  return <canvas ref={canvasRef} className="block w-full h-full touch-none" onMouseDown={throwKnife} onTouchStart={throwKnife} />;
 };
 
 export default GameCanvas;
