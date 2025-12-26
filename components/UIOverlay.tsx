@@ -31,9 +31,8 @@ const TRANSLATIONS = {
     ACCESS_PRIZE: "ACCESS PRIZE CORE",
     REWARD_ACQUIRED: "REWARD ACQUIRED",
     NEW_CYCLE: "NEW CYCLE",
-    SYSTEM_FAILURE: "GAME OVER",
-    REBOOT: "PLAY AGAIN",
-    CONTINUE_DESC: "PAY MORE TO CONTINUE",
+    SYSTEM_FAILURE: "SYSTEM FAILURE",
+    REBOOT: "REBOOT SYSTEM",
     STEP: "STEP",
     STEP1: "TARGET LOCK",
     STEP1_DESC: "The core rotates at dynamic intervals",
@@ -60,9 +59,8 @@ const TRANSLATIONS = {
     ACCESS_PRIZE: "進入獎勵核心",
     REWARD_ACQUIRED: "獲得獎勵",
     NEW_CYCLE: "新循環",
-    SYSTEM_FAILURE: "遊戲結束",
-    REBOOT: "再玩一次",
-    CONTINUE_DESC: "投入更多以繼續",
+    SYSTEM_FAILURE: "系統故障",
+    REBOOT: "重啟系統",
     STEP: "步驟",
     STEP1: "鎖定目標",
     STEP1_DESC: "核心會以動態間隔旋轉",
@@ -428,7 +426,7 @@ const UIOverlay: React.FC<UIOverlayProps> = ({
                <ShieldCheck size={60} className="text-rose-500 rotate-180" />
             </div>
             <h2 className="text-7xl font-black text-rose-500 mb-4 uppercase tracking-tighter title-font">{t.SYSTEM_FAILURE}</h2>
-            <p className="text-slate-500 mb-10 tracking-[0.4em] text-xs font-bold uppercase">{t.CONTINUE_DESC}</p>
+            <p className="text-slate-500 mb-10 tracking-[0.4em] text-xs font-bold uppercase">Critical integrity loss detected</p>
             <button onClick={onRestart} className={`${btnClass} bg-rose-600 text-white w-full shadow-[0_0_40px_rgba(225,29,72,0.4)]`}>
               <span className="whitespace-nowrap">{t.REBOOT}</span>
             </button>
