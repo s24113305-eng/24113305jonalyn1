@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Dart Legacy - Neon GDB Edition</title>
+    <title>Dart Legacy - Full Screen Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="importmap">
@@ -12,8 +12,8 @@
     "react": "https://esm.sh/react@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.460.0",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
@@ -23,11 +23,19 @@
       body {
         font-family: 'Fredoka', sans-serif;
         margin: 0;
+        padding: 0;
         background-color: #020617;
         color: white;
         overflow: hidden;
         user-select: none;
         touch-action: none;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
       }
 
       .bg-grid {
@@ -43,14 +51,14 @@
         content: "";
         position: absolute;
         inset: 0;
-        background: linear-gradient(transparent 0%, rgba(2, 6, 23, 1) 100%);
+        background: radial-gradient(circle at center, transparent 0%, rgba(2, 6, 23, 0.8) 100%);
       }
 
       .scanline {
         width: 100%;
         height: 100px;
         z-index: 100;
-        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(34, 211, 238, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(34, 211, 238, 0.05) 50%, rgba(0, 0, 0, 0) 100%);
         opacity: 0.1;
         position: absolute;
         bottom: 100%;
@@ -67,6 +75,7 @@
 
       .glitch {
         position: relative;
+        display: inline-block;
       }
       .glitch::before, .glitch::after {
         content: attr(data-text);
@@ -87,19 +96,27 @@
 
       @keyframes glitch-anim {
         0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
+        20% { transform: translate(-3px, 3px); }
+        40% { transform: translate(-3px, -3px); }
+        60% { transform: translate(3px, 3px); }
+        80% { transform: translate(3px, -3px); }
         100% { transform: translate(0); }
       }
       @keyframes glitch-anim2 {
         0% { transform: translate(0); }
-        20% { transform: translate(2px, -2px); }
-        40% { transform: translate(2px, 2px); }
-        60% { transform: translate(-2px, -2px); }
-        80% { transform: translate(-2px, 2px); }
+        20% { transform: translate(3px, -3px); }
+        40% { transform: translate(3px, 3px); }
+        60% { transform: translate(-3px, -3px); }
+        80% { transform: translate(-3px, 3px); }
         100% { transform: translate(0); }
+      }
+
+      .neon-pulse {
+        animation: neon-pulse-anim 2s infinite ease-in-out;
+      }
+      @keyframes neon-pulse-anim {
+        0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 247, 255, 0.5)); }
+        50% { filter: drop-shadow(0 0 30px rgba(0, 247, 255, 0.9)); }
       }
     </style>
 </head>
@@ -110,11 +127,9 @@
         import React, { useState, useEffect, useRef, useCallback } from 'react';
         import ReactDOM from 'react-dom/client';
         import { 
-          Target, Heart, Trophy, CheckCircle2, ShieldCheck, Quote, 
-          Star, Crosshair, ArrowRight, Zap, Check, MousePointer2 
+          Target, Trophy, CheckCircle2, ShieldCheck, Maximize2, Minimize2 
         } from 'lucide-react';
 
-        // --- CONSTANTS ---
         const GameState = { MENU: 'MENU', PLAYING: 'PLAYING', GAME_OVER: 'GAME_OVER', LEVEL_COMPLETE: 'LEVEL_COMPLETE', PRIZE_WON: 'PRIZE_WON' };
         const PRIZES = ["NEON BLADE", "CYBER CORE", "PULSE ORB", "VOID DART", "ELECTRIC WING"];
         const PRIZE_COLORS = ["#ff00ff", "#00ffff", "#ffff00", "#ff4d00", "#00ff00"];
@@ -125,14 +140,51 @@
           tw: { TITLE: "飛鏢傳奇", START: "啟動挑戰", OVER: "系統故障", PAY: "請投幣以繼續", AGAIN: "再次挑戰", CLEAR: "區域清除！", ACCESS: "進入獎勵核心", WON: "獲得獎勵" }
         };
 
-        // --- COMPONENTS ---
+        const NeonLogo = () => (
+          <div className="relative w-48 h-48 mb-8 flex items-center justify-center neon-pulse">
+            <svg viewBox="0 0 200 200" className="w-full h-full">
+              <defs>
+                <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
+                  <feOffset in="blur" dx="0" dy="0" result="offsetBlur" />
+                  <feFlood floodColor="#00f7ff" result="color" />
+                  <feComposite in="color" in2="offsetBlur" operator="in" result="glow" />
+                  <feMerge>
+                    <feMergeNode in="glow" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient id="dart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#00f7ff', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+              {/* Outer Ring */}
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#00f7ff" strokeWidth="2" strokeDasharray="10 15" className="animate-[spin_20s_linear_infinite]" />
+              <circle cx="100" cy="100" r="60" fill="none" stroke="#f43f5e" strokeWidth="4" strokeDasharray="50 30" className="animate-[spin_10s_linear_infinite_reverse]" />
+              {/* Inner Bullseye */}
+              <circle cx="100" cy="100" r="15" fill="#00f7ff" className="animate-pulse" />
+              {/* Crossed Darts */}
+              <g transform="rotate(45, 100, 100)" filter="url(#neon-glow)">
+                <path d="M100 20 L110 50 L90 50 Z" fill="url(#dart-grad)" />
+                <rect x="98" y="50" width="4" height="60" fill="#ffffff" />
+                <path d="M90 110 L100 130 L110 110 Z" fill="#f43f5e" />
+              </g>
+              <g transform="rotate(-45, 100, 100)" filter="url(#neon-glow)">
+                <path d="M100 20 L110 50 L90 50 Z" fill="url(#dart-grad)" />
+                <rect x="98" y="50" width="4" height="60" fill="#ffffff" />
+                <path d="M90 110 L100 130 L110 110 Z" fill="#f43f5e" />
+              </g>
+            </svg>
+          </div>
+        );
 
         const HUDCorners = () => (
           <>
-            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-500/30 rounded-tl-xl pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-cyan-500/30 rounded-tr-xl pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-cyan-500/30 rounded-bl-xl pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/30 rounded-br-xl pointer-events-none"></div>
+            <div className="absolute top-4 left-4 w-16 h-16 border-t-2 border-l-2 border-cyan-500/40 rounded-tl-3xl pointer-events-none"></div>
+            <div className="absolute top-4 right-4 w-16 h-16 border-t-2 border-r-2 border-cyan-500/40 rounded-tr-3xl pointer-events-none"></div>
+            <div className="absolute bottom-4 left-4 w-16 h-16 border-b-2 border-l-2 border-cyan-500/40 rounded-bl-3xl pointer-events-none"></div>
+            <div className="absolute bottom-4 right-4 w-16 h-16 border-b-2 border-r-2 border-cyan-500/40 rounded-br-3xl pointer-events-none"></div>
           </>
         );
 
@@ -148,11 +200,8 @@
           const drawDart = (ctx) => {
             const w = CONFIG.KNIFE_WIDTH, h = CONFIG.KNIFE_HEIGHT;
             ctx.save();
-            // Barrel
             ctx.fillStyle = "#334155"; ctx.beginPath(); ctx.roundRect(-w/2, -h/2, w, h*0.6, 2); ctx.fill();
-            // Needle
             ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.moveTo(-0.5, h*0.1); ctx.lineTo(0, h/2+10); ctx.lineTo(0.5, h*0.1); ctx.fill();
-            // Flights (Neon Pink)
             ctx.fillStyle = "#ff0080"; ctx.beginPath(); ctx.moveTo(0, -h/2+5); ctx.lineTo(-w*2, -h/2-15); ctx.lineTo(0, -h/2-5); ctx.lineTo(w*2, -h/2-15); ctx.closePath(); ctx.fill();
             ctx.restore();
           };
@@ -180,12 +229,9 @@
             const centerX = canvas.width / 2, centerY = canvas.height / 3 + 40;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Deep Neon Background
             const bgGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, canvas.width * 0.8);
-            bgGrad.addColorStop(0, "#1e0b3d"); 
-            bgGrad.addColorStop(1, "#05010a");
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            bgGrad.addColorStop(0, "#1e0b3d"); bgGrad.addColorStop(1, "#05010a");
+            ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (gameState === GameState.PLAYING) {
               if (time > behaviorRef.current.nextTime) {
@@ -201,7 +247,6 @@
             }
 
             const radius = CONFIG.TARGET_RADIUS + (level === 6 ? 60 : 0);
-
             ctx.save(); ctx.translate(centerX, centerY); ctx.rotate(rotationRef.current);
             if (level < 6) {
               ctx.strokeStyle = "#00f7ff"; ctx.lineWidth = 3; ctx.shadowBlur = 15; ctx.shadowColor = "#00f7ff";
@@ -259,76 +304,101 @@
           const [darts, setDarts] = useState(5);
           const [prize, setPrize] = useState(null);
           const [lang, setLang] = useState('en');
+          const [isFullscreen, setIsFullscreen] = useState(false);
           const t = TRANSLATIONS[lang];
 
           const start = () => { setScore(0); setLevel(1); setGameState(GameState.PLAYING); };
+          const toggleFullscreen = () => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(err => console.log(err));
+              setIsFullscreen(true);
+            } else {
+              if (document.exitFullscreen) document.exitFullscreen();
+              setIsFullscreen(false);
+            }
+          };
+
           const btn = "px-10 py-5 rounded-2xl font-black text-xl title-font transition-all active:scale-95 shadow-2xl uppercase tracking-wider";
 
           return (
-            <div className="relative w-full h-screen overflow-hidden bg-slate-950 text-white">
+            <div className="relative w-full h-full bg-slate-950 text-white overflow-hidden">
               <div className="bg-grid"></div>
               <div className="scanline"></div>
+              
+              <button 
+                onClick={toggleFullscreen} 
+                className="absolute top-6 right-6 z-[60] p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+              >
+                {isFullscreen ? <Minimize2 size={24} /> : <Maximize2 size={24} />}
+              </button>
+
               <GameCanvas gameState={gameState} level={level} onHit={()=>setScore(s=>s+1)} onFail={()=>setGameState(GameState.GAME_OVER)} onLevelComplete={()=>{ if(level<5)setLevel(l=>l+1); else setGameState(GameState.LEVEL_COMPLETE); }} onPrizeWon={p=>{setPrize(p); setGameState(GameState.PRIZE_WON);}} onDartsUpdate={setDarts} />
               
               {gameState === GameState.PLAYING && (
-                <div className="absolute inset-0 pointer-events-none p-8 flex flex-col justify-between">
+                <div className="absolute inset-0 pointer-events-none p-10 flex flex-col justify-between">
                   <div className="flex justify-between items-start">
-                    <div className="bg-black/60 backdrop-blur-md p-5 rounded-[2rem] border border-white/5 shadow-2xl">
-                      <div className="text-5xl font-black title-font drop-shadow-[0_0_10px_#fff]">{score}</div>
+                    <div className="bg-black/40 backdrop-blur-md p-6 rounded-[2.5rem] border border-white/5 shadow-2xl">
+                      <div className="text-6xl font-black title-font drop-shadow-[0_0_15px_#fff]">{score}</div>
                       <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.4em]">SCORE</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-3xl font-black title-font text-white">{level === 6 ? "BONUS" : `S-${level.toString().padStart(2, '0')}`}</div>
+                      <div className="text-4xl font-black title-font text-white">{level === 6 ? "BONUS" : `S-${level.toString().padStart(2, '0')}`}</div>
                       <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.4em]">SECTOR</div>
                     </div>
                   </div>
-                  <div className="flex flex-col-reverse gap-3 ml-2">
-                    {[...Array(5)].map((_, i) => <div key={i} className={`w-2.5 h-10 rounded-full transition-all duration-300 ${i < darts ? 'bg-cyan-400 shadow-[0_0_20px_#00ffff]' : 'bg-slate-800 opacity-20'}`}></div>)}
+                  <div className="flex flex-col-reverse gap-4 ml-2">
+                    {[...Array(5)].map((_, i) => <div key={i} className={`w-3 h-12 rounded-full transition-all duration-300 ${i < darts ? 'bg-cyan-400 shadow-[0_0_20px_#00ffff]' : 'bg-slate-800 opacity-20'}`}></div>)}
                   </div>
                 </div>
               )}
 
               {gameState !== GameState.PLAYING && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-6">
-                  <div className="max-w-md w-full text-center flex flex-col items-center relative p-16 bg-slate-900/60 rounded-[4rem] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)]">
-                    <HUDCorners />
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-xl p-0">
+                  <HUDCorners />
+                  <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center relative max-w-4xl">
                     {gameState === GameState.MENU && (
                       <>
-                        <h1 className="glitch text-7xl font-black mb-12 title-font text-white tracking-tighter" data-text={t.TITLE}>{t.TITLE}</h1>
-                        <button onClick={start} className={`${btn} bg-cyan-500 text-black hover:bg-cyan-400 shadow-[0_0_40px_rgba(6,182,212,0.4)]`}>
+                        <div className="mb-12 flex flex-col items-center">
+                          {/* Replaced Image URL with Code-based Neon Logo */}
+                          <NeonLogo />
+                          
+                          <h1 className="glitch text-7xl md:text-8xl font-black mb-4 title-font text-white tracking-tighter leading-tight" data-text={t.TITLE}>{t.TITLE}</h1>
+                          <div className="h-1 w-48 bg-cyan-500 mx-auto rounded-full animate-pulse shadow-[0_0_20px_rgba(6,182,212,1)]"></div>
+                        </div>
+                        <button onClick={start} className={`${btn} bg-cyan-500 text-black hover:bg-cyan-400 shadow-[0_0_60px_rgba(6,182,212,0.4)] px-16 py-8 text-2xl`}>
                           {t.START}
                         </button>
-                        <div className="flex gap-6 mt-12">
-                          <button onClick={()=>setLang('en')} className={`text-sm font-black tracking-widest ${lang==='en'?'text-cyan-400':'text-slate-600'}`}>EN</button>
-                          <button onClick={()=>setLang('tw')} className={`text-sm font-black tracking-widest ${lang==='tw'?'text-cyan-400':'text-slate-600'}`}>TW</button>
+                        <div className="flex gap-8 mt-16">
+                          <button onClick={()=>setLang('en')} className={`text-sm font-black tracking-widest ${lang==='en'?'text-cyan-400':'text-slate-600'}`}>ENGLISH</button>
+                          <button onClick={()=>setLang('tw')} className={`text-sm font-black tracking-widest ${lang==='tw'?'text-cyan-400':'text-slate-600'}`}>繁體中文</button>
                         </div>
                       </>
                     )}
                     {gameState === GameState.GAME_OVER && (
                       <>
-                        <ShieldCheck size={80} className="text-rose-500 mb-8 rotate-180 drop-shadow-[0_0_20px_rgba(244,63,94,0.5)]" />
-                        <h2 className="text-5xl font-black text-rose-500 mb-4 title-font tracking-tight">{t.OVER}</h2>
-                        <p className="text-slate-500 text-[10px] font-black mb-10 tracking-[0.4em] uppercase">{t.PAY}</p>
-                        <button onClick={start} className={`${btn} bg-rose-600 text-white w-full shadow-[0_0_40px_rgba(225,29,72,0.4)]`}>
+                        <ShieldCheck size={120} className="text-rose-500 mb-10 rotate-180 drop-shadow-[0_0_30px_rgba(244,63,94,0.5)]" />
+                        <h2 className="text-7xl font-black text-rose-500 mb-4 title-font tracking-tight">{t.OVER}</h2>
+                        <p className="text-slate-500 text-sm font-black mb-12 tracking-[0.6em] uppercase">{t.PAY}</p>
+                        <button onClick={start} className={`${btn} bg-rose-600 text-white w-full max-w-md shadow-[0_0_60px_rgba(225,29,72,0.4)]`}>
                           {t.AGAIN}
                         </button>
                       </>
                     )}
                     {gameState === GameState.LEVEL_COMPLETE && (
                       <>
-                        <CheckCircle2 size={80} className="text-cyan-400 mb-8 animate-pulse drop-shadow-[0_0_20px_#00ffff]" />
-                        <h2 className="text-4xl font-black mb-10 title-font tracking-tight">{t.CLEAR}</h2>
-                        <button onClick={()=>setLevel(6)||setGameState(GameState.PLAYING)} className={`${btn} bg-rose-500 text-white w-full shadow-[0_0_40px_rgba(244,63,94,0.4)]`}>
+                        <CheckCircle2 size={120} className="text-cyan-400 mb-10 animate-pulse drop-shadow-[0_0_30px_#00ffff]" />
+                        <h2 className="text-6xl font-black mb-12 title-font tracking-tight">{t.CLEAR}</h2>
+                        <button onClick={()=>setLevel(6)||setGameState(GameState.PLAYING)} className={`${btn} bg-rose-500 text-white w-full max-w-md shadow-[0_0_60px_rgba(244,63,94,0.4)]`}>
                           {t.ACCESS}
                         </button>
                       </>
                     )}
                     {gameState === GameState.PRIZE_WON && (
                       <>
-                        <Trophy size={80} className="text-yellow-400 mb-8 drop-shadow-[0_0_20px_rgba(250,204,21,0.5)]" />
-                        <h2 className="text-3xl font-black mb-8 title-font">{t.WON}</h2>
-                        <div className="text-4xl font-black text-yellow-400 mb-12 title-font tracking-tighter drop-shadow-[0_0_10px_#eab308]">{prize}</div>
-                        <button onClick={start} className={`${btn} bg-cyan-500 text-black w-full`}>{t.AGAIN}</button>
+                        <Trophy size={120} className="text-yellow-400 mb-10 drop-shadow-[0_0_30px_rgba(250,204,21,0.5)]" />
+                        <h2 className="text-5xl font-black mb-10 title-font">{t.WON}</h2>
+                        <div className="text-6xl font-black text-yellow-400 mb-16 title-font tracking-tighter drop-shadow-[0_0_20px_#eab308]">{prize}</div>
+                        <button onClick={start} className={`${btn} bg-cyan-500 text-black w-full max-w-md`}>{t.AGAIN}</button>
                       </>
                     )}
                   </div>
