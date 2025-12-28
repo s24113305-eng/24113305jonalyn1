@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Dart Legacy - White Edition</title>
+    <title>Dart Legacy - Neon GDB Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script type="importmap">
@@ -12,55 +12,95 @@
     "react": "https://esm.sh/react@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "lucide-react": "https://esm.sh/lucide-react@0.460.0",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
   }
 }
 </script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Orbitron:wght@400;900&display=swap');
-      body { 
-        font-family: 'Fredoka', sans-serif; 
-        margin: 0; 
-        background-color: #ffffff; 
-        color: #0f172a; 
-        overflow: hidden; 
-        user-select: none; 
-        touch-action: none; 
+      
+      body {
+        font-family: 'Fredoka', sans-serif;
+        margin: 0;
+        background-color: #020617;
+        color: white;
+        overflow: hidden;
+        user-select: none;
+        touch-action: none;
       }
-      .bg-grid { 
-        background-image: linear-gradient(to right, rgba(15, 23, 42, 0.05) 1px, transparent 1px), 
-                          linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px); 
-        background-size: 50px 50px; 
-        position: absolute; 
-        inset: 0; 
-        pointer-events: none; 
+
+      .bg-grid {
+        background-image: linear-gradient(to right, rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+                          linear-gradient(to bottom, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
       }
-      .bg-grid::after { 
-        content: ""; 
-        position: absolute; 
-        inset: 0; 
-        background: linear-gradient(transparent 0%, rgba(255, 255, 255, 1) 100%); 
+
+      .bg-grid::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(transparent 0%, rgba(2, 6, 23, 1) 100%);
       }
-      .scanline { 
-        width: 100%; 
-        height: 100px; 
-        z-index: 100; 
-        background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(34, 211, 238, 0.05) 50%, rgba(255, 255, 255, 0) 100%); 
-        opacity: 0.2; 
-        position: absolute; 
-        bottom: 100%; 
-        animation: scanline 8s linear infinite; 
-        pointer-events: none; 
+
+      .scanline {
+        width: 100%;
+        height: 100px;
+        z-index: 100;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(34, 211, 238, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+        opacity: 0.1;
+        position: absolute;
+        bottom: 100%;
+        animation: scanline 8s linear infinite;
+        pointer-events: none;
       }
-      @keyframes scanline { 0% { bottom: 100%; } 100% { bottom: -100px; } }
+
+      @keyframes scanline {
+        0% { bottom: 100%; }
+        100% { bottom: -100px; }
+      }
+      
       .title-font { font-family: 'Orbitron', sans-serif; }
-      .glitch { position: relative; }
-      .glitch::before, .glitch::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.8; }
-      .glitch::before { color: #22d3ee; z-index: -1; animation: glitch-anim 3s infinite linear alternate-reverse; }
-      .glitch::after { color: #f43f5e; z-index: -2; animation: glitch-anim2 2s infinite linear alternate-reverse; }
-      @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 100% { transform: translate(0); } }
-      @keyframes glitch-anim2 { 0% { transform: translate(0); } 20% { transform: translate(2px, -2px); } 100% { transform: translate(0); } }
+
+      .glitch {
+        position: relative;
+      }
+      .glitch::before, .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0.8;
+      }
+      .glitch::before {
+        color: #22d3ee;
+        z-index: -1;
+        animation: glitch-anim 3s infinite linear alternate-reverse;
+      }
+      .glitch::after {
+        color: #f43f5e;
+        z-index: -2;
+        animation: glitch-anim2 2s infinite linear alternate-reverse;
+      }
+
+      @keyframes glitch-anim {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0); }
+      }
+      @keyframes glitch-anim2 {
+        0% { transform: translate(0); }
+        20% { transform: translate(2px, -2px); }
+        40% { transform: translate(2px, 2px); }
+        60% { transform: translate(-2px, -2px); }
+        80% { transform: translate(-2px, 2px); }
+        100% { transform: translate(0); }
+      }
     </style>
 </head>
 <body>
@@ -71,13 +111,13 @@
         import ReactDOM from 'react-dom/client';
         import { 
           Target, Heart, Trophy, CheckCircle2, ShieldCheck, Quote, 
-          Star, Crosshair, ArrowRight, Zap, Check 
+          Star, Crosshair, ArrowRight, Zap, Check, MousePointer2 
         } from 'lucide-react';
 
-        // --- CONSTANTS & CONFIG ---
+        // --- CONSTANTS ---
         const GameState = { MENU: 'MENU', PLAYING: 'PLAYING', GAME_OVER: 'GAME_OVER', LEVEL_COMPLETE: 'LEVEL_COMPLETE', PRIZE_WON: 'PRIZE_WON' };
         const PRIZES = ["NEON BLADE", "CYBER CORE", "PULSE ORB", "VOID DART", "ELECTRIC WING"];
-        const PRIZE_COLORS = ["#ff00ff", "#00cccc", "#ffcc00", "#ff4d00", "#00aa00"];
+        const PRIZE_COLORS = ["#ff00ff", "#00ffff", "#ffff00", "#ff4d00", "#00ff00"];
         const CONFIG = { TARGET_RADIUS: 95, KNIFE_WIDTH: 10, KNIFE_HEIGHT: 70, COLLISION: 0.22, SPEED: 32 };
         
         const TRANSLATIONS = {
@@ -89,10 +129,10 @@
 
         const HUDCorners = () => (
           <>
-            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-slate-900/10 rounded-tl-xl pointer-events-none"></div>
-            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-slate-900/10 rounded-tr-xl pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-slate-900/10 rounded-bl-xl pointer-events-none"></div>
-            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-slate-900/10 rounded-br-xl pointer-events-none"></div>
+            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-500/30 rounded-tl-xl pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-cyan-500/30 rounded-tr-xl pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-cyan-500/30 rounded-bl-xl pointer-events-none"></div>
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/30 rounded-br-xl pointer-events-none"></div>
           </>
         );
 
@@ -103,12 +143,16 @@
           const activeRef = useRef(null);
           const knivesLeftRef = useRef(5);
           const frameIdRef = useRef(0);
+          const behaviorRef = useRef({ state: 'NORMAL', nextTime: 0 });
 
           const drawDart = (ctx) => {
             const w = CONFIG.KNIFE_WIDTH, h = CONFIG.KNIFE_HEIGHT;
             ctx.save();
-            ctx.fillStyle = "#475569"; ctx.beginPath(); ctx.roundRect(-w/2, -h/2, w, h*0.6, 2); ctx.fill();
-            ctx.fillStyle = "#1e293b"; ctx.beginPath(); ctx.moveTo(-0.5, h*0.1); ctx.lineTo(0, h/2+10); ctx.lineTo(0.5, h*0.1); ctx.fill();
+            // Barrel
+            ctx.fillStyle = "#334155"; ctx.beginPath(); ctx.roundRect(-w/2, -h/2, w, h*0.6, 2); ctx.fill();
+            // Needle
+            ctx.fillStyle = "#ffffff"; ctx.beginPath(); ctx.moveTo(-0.5, h*0.1); ctx.lineTo(0, h/2+10); ctx.lineTo(0.5, h*0.1); ctx.fill();
+            // Flights (Neon Pink)
             ctx.fillStyle = "#ff0080"; ctx.beginPath(); ctx.moveTo(0, -h/2+5); ctx.lineTo(-w*2, -h/2-15); ctx.lineTo(0, -h/2-5); ctx.lineTo(w*2, -h/2-15); ctx.closePath(); ctx.fill();
             ctx.restore();
           };
@@ -121,42 +165,57 @@
           }, [gameState, onDartsUpdate]);
 
           useEffect(() => {
-            const handleKey = (e) => e.code === 'Space' && throwKnife();
+            const handleKey = (e) => e.code === 'Space' && (e.preventDefault(), throwKnife());
             window.addEventListener('keydown', handleKey); return () => window.removeEventListener('keydown', handleKey);
           }, [throwKnife]);
 
           useEffect(() => {
             knivesRef.current = []; knivesLeftRef.current = level === 6 ? 1 : 5 + Math.floor(level/2); onDartsUpdate(knivesLeftRef.current);
+            rotationRef.current = 0;
           }, [level]);
 
-          const update = () => {
+          const update = (time) => {
             const canvas = canvasRef.current; if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const centerX = canvas.width / 2, centerY = canvas.height / 3 + 40;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Light Background Gradient
-            const bgGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, canvas.width * 0.7);
-            bgGrad.addColorStop(0, "#f8fafc");
-            bgGrad.addColorStop(1, "#ffffff");
+            // Deep Neon Background
+            const bgGrad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, canvas.width * 0.8);
+            bgGrad.addColorStop(0, "#1e0b3d"); 
+            bgGrad.addColorStop(1, "#05010a");
             ctx.fillStyle = bgGrad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            if (gameState === GameState.PLAYING) rotationRef.current += (level === 6 ? 0.06 : 0.03 + level * 0.01);
+            if (gameState === GameState.PLAYING) {
+              if (time > behaviorRef.current.nextTime) {
+                const behaviors = ['NORMAL', 'FAST', 'SLOW', 'REVERSE'];
+                behaviorRef.current.state = behaviors[Math.floor(Math.random() * behaviors.length)];
+                behaviorRef.current.nextTime = time + 1500 + Math.random() * 2000;
+              }
+              let speed = 0.03 + level * 0.012;
+              if (behaviorRef.current.state === 'FAST') speed *= 2;
+              if (behaviorRef.current.state === 'SLOW') speed *= 0.4;
+              if (behaviorRef.current.state === 'REVERSE') speed *= -1;
+              rotationRef.current += (level === 6 ? 0.08 : speed);
+            }
+
             const radius = CONFIG.TARGET_RADIUS + (level === 6 ? 60 : 0);
 
             ctx.save(); ctx.translate(centerX, centerY); ctx.rotate(rotationRef.current);
             if (level < 6) {
-              ctx.strokeStyle = "#0891b2"; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(0, 0, radius + 5, 0, Math.PI * 2); ctx.stroke();
+              ctx.strokeStyle = "#00f7ff"; ctx.lineWidth = 3; ctx.shadowBlur = 15; ctx.shadowColor = "#00f7ff";
+              ctx.beginPath(); ctx.arc(0, 0, radius + 5, 0, Math.PI * 2); ctx.stroke();
+              ctx.shadowBlur = 0;
               for (let i = 0; i < 20; i++) {
                 ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0, 0, radius, (i*Math.PI*2)/20, ((i+1)*Math.PI*2)/20);
-                ctx.fillStyle = i % 2 === 0 ? "#1e293b" : "#f1f5f9"; ctx.fill();
+                ctx.fillStyle = i % 2 === 0 ? "#0f172a" : "#020617"; ctx.fill();
               }
             } else {
               for (let i = 0; i < PRIZES.length; i++) {
                 ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0, 0, radius, (i*Math.PI*2)/PRIZES.length, ((i+1)*Math.PI*2)/PRIZES.length);
                 ctx.fillStyle = PRIZE_COLORS[i % 5]; ctx.fill();
-                ctx.save(); ctx.rotate((i+0.5)*Math.PI*2/PRIZES.length); ctx.translate(radius*0.7, 0); ctx.fillStyle="white"; ctx.font="bold 10px Orbitron"; ctx.fillText(PRIZES[i], -20, 0); ctx.restore();
+                ctx.save(); ctx.rotate((i+0.5)*Math.PI*2/PRIZES.length); ctx.translate(radius*0.7, 0); ctx.fillStyle="white"; ctx.font="bold 12px Orbitron"; ctx.textAlign="center"; ctx.fillText(PRIZES[i], 0, 0); ctx.restore();
               }
             }
             knivesRef.current.forEach(k => { ctx.save(); ctx.rotate(k.angle + Math.PI/2); ctx.translate(0, -radius); drawDart(ctx); ctx.restore(); });
@@ -190,7 +249,7 @@
             return () => { cancelAnimationFrame(frameIdRef.current); window.removeEventListener('resize', resize); };
           }, [gameState, level]);
 
-          return <canvas ref={canvasRef} className="block w-full h-full touch-none" onMouseDown={throwKnife} />;
+          return <canvas ref={canvasRef} className="block w-full h-full touch-none" onMouseDown={throwKnife} onTouchStart={throwKnife} />;
         };
 
         const App = () => {
@@ -203,67 +262,73 @@
           const t = TRANSLATIONS[lang];
 
           const start = () => { setScore(0); setLevel(1); setGameState(GameState.PLAYING); };
-          const btn = "px-10 py-4 rounded-xl font-black text-lg title-font transition-transform active:scale-95 shadow-xl uppercase";
+          const btn = "px-10 py-5 rounded-2xl font-black text-xl title-font transition-all active:scale-95 shadow-2xl uppercase tracking-wider";
 
           return (
-            <div className="relative w-full h-screen overflow-hidden bg-white text-slate-900">
+            <div className="relative w-full h-screen overflow-hidden bg-slate-950 text-white">
               <div className="bg-grid"></div>
               <div className="scanline"></div>
               <GameCanvas gameState={gameState} level={level} onHit={()=>setScore(s=>s+1)} onFail={()=>setGameState(GameState.GAME_OVER)} onLevelComplete={()=>{ if(level<5)setLevel(l=>l+1); else setGameState(GameState.LEVEL_COMPLETE); }} onPrizeWon={p=>{setPrize(p); setGameState(GameState.PRIZE_WON);}} onDartsUpdate={setDarts} />
               
               {gameState === GameState.PLAYING && (
-                <div className="absolute inset-0 pointer-events-none p-6 flex flex-col justify-between">
+                <div className="absolute inset-0 pointer-events-none p-8 flex flex-col justify-between">
                   <div className="flex justify-between items-start">
-                    <div className="bg-white/60 backdrop-blur-md p-4 rounded-2xl border border-slate-900/5 shadow-lg">
-                      <div className="text-4xl font-black title-font text-slate-900">{score}</div>
-                      <div className="text-[9px] text-cyan-600 font-bold uppercase tracking-widest">SCORE</div>
+                    <div className="bg-black/60 backdrop-blur-md p-5 rounded-[2rem] border border-white/5 shadow-2xl">
+                      <div className="text-5xl font-black title-font drop-shadow-[0_0_10px_#fff]">{score}</div>
+                      <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.4em]">SCORE</div>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-black title-font text-slate-900">{level === 6 ? "BONUS" : `S-${level}`}</div>
-                      <div className="text-[9px] text-cyan-600 font-bold uppercase tracking-widest">SECTOR</div>
+                      <div className="text-3xl font-black title-font text-white">{level === 6 ? "BONUS" : `S-${level.toString().padStart(2, '0')}`}</div>
+                      <div className="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.4em]">SECTOR</div>
                     </div>
                   </div>
-                  <div className="flex flex-col-reverse gap-2 ml-2">
-                    {[...Array(5)].map((_, i) => <div key={i} className={`w-2 h-8 rounded-full ${i < darts ? 'bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.5)]' : 'bg-slate-200 opacity-50'}`}></div>)}
+                  <div className="flex flex-col-reverse gap-3 ml-2">
+                    {[...Array(5)].map((_, i) => <div key={i} className={`w-2.5 h-10 rounded-full transition-all duration-300 ${i < darts ? 'bg-cyan-400 shadow-[0_0_20px_#00ffff]' : 'bg-slate-800 opacity-20'}`}></div>)}
                   </div>
                 </div>
               )}
 
               {gameState !== GameState.PLAYING && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm p-6">
-                  <div className="max-w-md w-full text-center flex flex-col items-center relative p-12 bg-white/90 rounded-[3rem] border border-slate-900/5 shadow-2xl">
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-6">
+                  <div className="max-w-md w-full text-center flex flex-col items-center relative p-16 bg-slate-900/60 rounded-[4rem] border border-white/10 shadow-[0_0_100px_rgba(0,0,0,0.8)]">
                     <HUDCorners />
                     {gameState === GameState.MENU && (
                       <>
-                        <h1 className="glitch text-6xl font-black mb-8 title-font text-slate-900" data-text={t.TITLE}>{t.TITLE}</h1>
-                        <button onClick={start} className={`${btn} bg-cyan-600 text-white`}>{t.START}</button>
-                        <div className="flex gap-4 mt-8">
-                          <button onClick={()=>setLang('en')} className={`text-xs font-bold ${lang==='en'?'text-cyan-600':'text-slate-400'}`}>EN</button>
-                          <button onClick={()=>setLang('tw')} className={`text-xs font-bold ${lang==='tw'?'text-cyan-600':'text-slate-400'}`}>TW</button>
+                        <h1 className="glitch text-7xl font-black mb-12 title-font text-white tracking-tighter" data-text={t.TITLE}>{t.TITLE}</h1>
+                        <button onClick={start} className={`${btn} bg-cyan-500 text-black hover:bg-cyan-400 shadow-[0_0_40px_rgba(6,182,212,0.4)]`}>
+                          {t.START}
+                        </button>
+                        <div className="flex gap-6 mt-12">
+                          <button onClick={()=>setLang('en')} className={`text-sm font-black tracking-widest ${lang==='en'?'text-cyan-400':'text-slate-600'}`}>EN</button>
+                          <button onClick={()=>setLang('tw')} className={`text-sm font-black tracking-widest ${lang==='tw'?'text-cyan-400':'text-slate-600'}`}>TW</button>
                         </div>
                       </>
                     )}
                     {gameState === GameState.GAME_OVER && (
                       <>
-                        <ShieldCheck size={64} className="text-rose-500 mb-6 rotate-180" />
-                        <h2 className="text-4xl font-black text-rose-600 mb-2 title-font">{t.OVER}</h2>
-                        <p className="text-slate-400 text-xs font-bold mb-8 tracking-widest uppercase">{t.PAY}</p>
-                        <button onClick={start} className={`${btn} bg-rose-600 text-white w-full`}>{t.AGAIN}</button>
+                        <ShieldCheck size={80} className="text-rose-500 mb-8 rotate-180 drop-shadow-[0_0_20px_rgba(244,63,94,0.5)]" />
+                        <h2 className="text-5xl font-black text-rose-500 mb-4 title-font tracking-tight">{t.OVER}</h2>
+                        <p className="text-slate-500 text-[10px] font-black mb-10 tracking-[0.4em] uppercase">{t.PAY}</p>
+                        <button onClick={start} className={`${btn} bg-rose-600 text-white w-full shadow-[0_0_40px_rgba(225,29,72,0.4)]`}>
+                          {t.AGAIN}
+                        </button>
                       </>
                     )}
                     {gameState === GameState.LEVEL_COMPLETE && (
                       <>
-                        <CheckCircle2 size={64} className="text-cyan-600 mb-6 animate-pulse" />
-                        <h2 className="text-3xl font-black text-slate-900 mb-8 title-font">{t.CLEAR}</h2>
-                        <button onClick={()=>setLevel(6)||setGameState(GameState.PLAYING)} className={`${btn} bg-rose-500 text-white w-full`}>{t.ACCESS}</button>
+                        <CheckCircle2 size={80} className="text-cyan-400 mb-8 animate-pulse drop-shadow-[0_0_20px_#00ffff]" />
+                        <h2 className="text-4xl font-black mb-10 title-font tracking-tight">{t.CLEAR}</h2>
+                        <button onClick={()=>setLevel(6)||setGameState(GameState.PLAYING)} className={`${btn} bg-rose-500 text-white w-full shadow-[0_0_40px_rgba(244,63,94,0.4)]`}>
+                          {t.ACCESS}
+                        </button>
                       </>
                     )}
                     {gameState === GameState.PRIZE_WON && (
                       <>
-                        <Trophy size={64} className="text-yellow-600 mb-6" />
-                        <h2 className="text-2xl font-black text-slate-900 mb-6 title-font">{t.WON}</h2>
-                        <div className="text-3xl font-black text-yellow-600 mb-10 title-font tracking-tighter">{prize}</div>
-                        <button onClick={start} className={`${btn} bg-cyan-600 text-white w-full`}>{t.AGAIN}</button>
+                        <Trophy size={80} className="text-yellow-400 mb-8 drop-shadow-[0_0_20px_rgba(250,204,21,0.5)]" />
+                        <h2 className="text-3xl font-black mb-8 title-font">{t.WON}</h2>
+                        <div className="text-4xl font-black text-yellow-400 mb-12 title-font tracking-tighter drop-shadow-[0_0_10px_#eab308]">{prize}</div>
+                        <button onClick={start} className={`${btn} bg-cyan-500 text-black w-full`}>{t.AGAIN}</button>
                       </>
                     )}
                   </div>
