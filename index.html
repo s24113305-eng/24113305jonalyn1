@@ -112,11 +112,11 @@
       }
 
       .neon-pulse {
-        animation: neon-pulse-anim 2s infinite ease-in-out;
+        animation: neon-pulse-anim 3s infinite ease-in-out;
       }
       @keyframes neon-pulse-anim {
-        0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 247, 255, 0.5)); }
-        50% { filter: drop-shadow(0 0 30px rgba(0, 247, 255, 0.9)); }
+        0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 247, 255, 0.4)); }
+        50% { filter: drop-shadow(0 0 35px rgba(0, 247, 255, 0.7)); }
       }
     </style>
 </head>
@@ -140,44 +140,70 @@
           tw: { TITLE: "飛鏢傳奇", START: "啟動挑戰", OVER: "系統故障", PAY: "請投幣以繼續", AGAIN: "再次挑戰", CLEAR: "區域清除！", ACCESS: "進入獎勵核心", WON: "獲得獎勵" }
         };
 
-        const NeonLogo = () => (
-          <div className="relative w-48 h-48 mb-8 flex items-center justify-center neon-pulse">
-            <svg viewBox="0 0 200 200" className="w-full h-full">
-              <defs>
-                <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
-                  <feOffset in="blur" dx="0" dy="0" result="offsetBlur" />
-                  <feFlood floodColor="#00f7ff" result="color" />
-                  <feComposite in="color" in2="offsetBlur" operator="in" result="glow" />
-                  <feMerge>
-                    <feMergeNode in="glow" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <linearGradient id="dart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: '#00f7ff', stopOpacity: 1 }} />
-                </linearGradient>
-              </defs>
-              {/* Outer Ring */}
-              <circle cx="100" cy="100" r="80" fill="none" stroke="#00f7ff" strokeWidth="2" strokeDasharray="10 15" className="animate-[spin_20s_linear_infinite]" />
-              <circle cx="100" cy="100" r="60" fill="none" stroke="#f43f5e" strokeWidth="4" strokeDasharray="50 30" className="animate-[spin_10s_linear_infinite_reverse]" />
-              {/* Inner Bullseye */}
-              <circle cx="100" cy="100" r="15" fill="#00f7ff" className="animate-pulse" />
-              {/* Crossed Darts */}
-              <g transform="rotate(45, 100, 100)" filter="url(#neon-glow)">
-                <path d="M100 20 L110 50 L90 50 Z" fill="url(#dart-grad)" />
-                <rect x="98" y="50" width="4" height="60" fill="#ffffff" />
-                <path d="M90 110 L100 130 L110 110 Z" fill="#f43f5e" />
-              </g>
-              <g transform="rotate(-45, 100, 100)" filter="url(#neon-glow)">
-                <path d="M100 20 L110 50 L90 50 Z" fill="url(#dart-grad)" />
-                <rect x="98" y="50" width="4" height="60" fill="#ffffff" />
-                <path d="M90 110 L100 130 L110 110 Z" fill="#f43f5e" />
-              </g>
-            </svg>
-          </div>
-        );
+        const NeonLogo = () => {
+          // Generate radial lines for dartboard segments
+          const segments = Array.from({ length: 20 }, (_, i) => {
+            const angle = (i * 360) / 20;
+            const x2 = 100 + 85 * Math.cos((angle * Math.PI) / 180);
+            const y2 = 100 + 85 * Math.sin((angle * Math.PI) / 180);
+            return <line key={i} x1="100" y1="100" x2={x2} y2={y2} stroke="rgba(0, 247, 255, 0.15)" strokeWidth="1" />;
+          });
+
+          return (
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80 mb-12 flex items-center justify-center neon-pulse">
+              <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_0_20px_rgba(0,247,255,0.3)]">
+                <defs>
+                  <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
+                    <feOffset in="blur" dx="0" dy="0" result="offsetBlur" />
+                    <feFlood floodColor="#00f7ff" result="color" />
+                    <feComposite in="color" in2="offsetBlur" operator="in" result="glow" />
+                    <feMerge>
+                      <feMergeNode in="glow" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <linearGradient id="dart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#00f7ff', stopOpacity: 1 }} />
+                  </linearGradient>
+                </defs>
+                
+                {/* Background Base */}
+                <circle cx="100" cy="100" r="95" fill="#020617" stroke="#1e293b" strokeWidth="2" />
+                
+                {/* Spinning Segments and Rings */}
+                <g className="animate-[spin_60s_linear_infinite] origin-center">
+                  {segments}
+                  {/* Outer Double Ring */}
+                  <circle cx="100" cy="100" r="82" fill="none" stroke="rgba(244, 63, 94, 0.4)" strokeWidth="8" strokeDasharray="25.7 1" />
+                  {/* Inner Triple Ring */}
+                  <circle cx="100" cy="100" r="50" fill="none" stroke="rgba(0, 247, 255, 0.4)" strokeWidth="8" strokeDasharray="15.7 1" />
+                </g>
+
+                {/* Decorative Tech Rings */}
+                <circle cx="100" cy="100" r="92" fill="none" stroke="#00f7ff" strokeWidth="1" strokeDasharray="10 15" className="animate-[spin_40s_linear_infinite]" />
+                <circle cx="100" cy="100" r="94" fill="none" stroke="#f43f5e" strokeWidth="0.5" strokeDasharray="2 8" className="animate-[spin_20s_linear_infinite_reverse]" />
+
+                {/* Bullseye Center */}
+                <circle cx="100" cy="100" r="14" fill="#f43f5e" className="animate-pulse shadow-[0_0_15px_#f43f5e]" />
+                <circle cx="100" cy="100" r="6" fill="#00f7ff" />
+
+                {/* Iconic Crossed Darts */}
+                <g transform="rotate(45, 100, 100)" filter="url(#neon-glow)">
+                  <path d="M100 25 L108 55 L92 55 Z" fill="url(#dart-grad)" />
+                  <rect x="98.5" y="55" width="3" height="55" fill="#ffffff" />
+                  <path d="M90 110 L100 135 L110 110 Z" fill="#f43f5e" />
+                </g>
+                <g transform="rotate(-45, 100, 100)" filter="url(#neon-glow)">
+                  <path d="M100 25 L108 55 L92 55 Z" fill="url(#dart-grad)" />
+                  <rect x="98.5" y="55" width="3" height="55" fill="#ffffff" />
+                  <path d="M90 110 L100 135 L110 110 Z" fill="#f43f5e" />
+                </g>
+              </svg>
+            </div>
+          );
+        };
 
         const HUDCorners = () => (
           <>
@@ -358,8 +384,7 @@
                   <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center relative max-w-4xl">
                     {gameState === GameState.MENU && (
                       <>
-                        <div className="mb-12 flex flex-col items-center">
-                          {/* Replaced Image URL with Code-based Neon Logo */}
+                        <div className="mb-6 flex flex-col items-center">
                           <NeonLogo />
                           
                           <h1 className="glitch text-7xl md:text-8xl font-black mb-4 title-font text-white tracking-tighter leading-tight" data-text={t.TITLE}>{t.TITLE}</h1>
@@ -368,7 +393,7 @@
                         <button onClick={start} className={`${btn} bg-cyan-500 text-black hover:bg-cyan-400 shadow-[0_0_60px_rgba(6,182,212,0.4)] px-16 py-8 text-2xl`}>
                           {t.START}
                         </button>
-                        <div className="flex gap-8 mt-16">
+                        <div className="flex gap-8 mt-12">
                           <button onClick={()=>setLang('en')} className={`text-sm font-black tracking-widest ${lang==='en'?'text-cyan-400':'text-slate-600'}`}>ENGLISH</button>
                           <button onClick={()=>setLang('tw')} className={`text-sm font-black tracking-widest ${lang==='tw'?'text-cyan-400':'text-slate-600'}`}>繁體中文</button>
                         </div>
