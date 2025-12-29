@@ -1,5 +1,5 @@
 {
-  "name": "Dart Legacy",
+  "name": "Dart Legacy final",
   "description": "A reflex-based dart throwing game with lives, keyboard support, and increasing difficulty stages.",
   "requestFramePermissions": []
 }
